@@ -1,0 +1,7 @@
+# intellij
+.idea/
+barren-land.iml
+
+# gradle
+.gradle/
+build/

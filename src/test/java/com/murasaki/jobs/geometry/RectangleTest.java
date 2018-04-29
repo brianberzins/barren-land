@@ -49,6 +49,19 @@ class RectangleTest {
             );
         }
 
+    }
+
+    @DisplayName("area")
+    static class Area {
+
+        @Test
+        @DisplayName("area is calculated accurately")
+        void area() {
+            Point lowerLeft = new Point(0, 0);
+            Point upperRight = new Point(5, 5);
+            Rectangle rectangle = new Rectangle(lowerLeft, upperRight);
+            assertEquals(36, rectangle.area());
+        }
 
     }
 

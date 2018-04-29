@@ -38,7 +38,10 @@ class Rectangle {
      * @return the area of this rectangle
      */
     int area() {
-        return 0;
+        // be very careful with off-by-one errors, all rectangles has a witch of 1
+        int width = upperRight.getX() - upperLeft.getX() + 1;
+        int height = upperRight.getY() - lowerRight.getY() + 1;
+        return width * height;
     }
 
     /**

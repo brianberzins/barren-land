@@ -1,14 +1,12 @@
 package com.murasaki.jobs.geometry;
 
-import lombok.Builder;
 import lombok.Value;
 
-@Builder
 @Value
 class Point {
 
-    int horizontal;
-    int vertical;
+    int x;
+    int y;
 
     /**
      * Checks whether this point is directionally adjacent to the specified point

@@ -1,12 +1,10 @@
 package com.murasaki.jobs.geometry;
 
-import lombok.Builder;
 import lombok.Value;
 
 import java.util.Collections;
 import java.util.Set;
 
-@Builder
 @Value
 class Rectangle {
 
@@ -20,11 +18,27 @@ class Rectangle {
      *
      * @param lowerLeft     lower left corner of the rectangle
      * @param upperRight    upper right corner of the rectangle
-     * @return rectangle defined by the two points
      * @throws IllegalArgumentException if the points are directionally not correct from each other
      */
-    static Rectangle from(Point lowerLeft, Point upperRight) {
-        return null;
+    Rectangle(Point lowerLeft, Point upperRight) {
+        if (upperRight.getX() < lowerLeft.getX()) {
+            throw new IllegalArgumentException("upper right corner is to the left of the lower left corner");
+        } else if (upperRight.getY() < lowerLeft.getY()) {
+            throw new IllegalArgumentException("upper right corner is below the lower left corner");
+        }
+        this.lowerLeft = lowerLeft;
+        this.upperRight = upperRight;
+        this.upperLeft = new Point(lowerLeft.getX(), upperRight.getY());
+        this.lowerRight = new Point(upperRight.getX(), lowerLeft.getY());
+    }
+
+    /**
+     * Gets the area of this rectangle
+     *
+     * @return the area of this rectangle
+     */
+    int area() {
+        return 0;
     }
 
     /**

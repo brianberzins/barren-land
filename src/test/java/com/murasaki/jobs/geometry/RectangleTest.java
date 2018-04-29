@@ -69,6 +69,13 @@ class RectangleTest {
     static class Intersect {
 
         @Test
+        @DisplayName("null rectangle")
+        void nullRectangle() {
+            Rectangle rectangle = new Rectangle(new Point(0, 0), new Point(5, 5));
+            assertNull(rectangle.intersection(null));
+        }
+
+        @Test
         @DisplayName("entirely overlapping")
         void totalOverlap() {
             Rectangle outer = new Rectangle(new Point(0, 0), new Point(5, 5));
@@ -82,49 +89,110 @@ class RectangleTest {
         @Test
         @DisplayName("no intersection")
         void noIntersection() {
-            Rectangle rect1 = new Rectangle(new Point(0, 0), new Point(2, 2));
-            Rectangle rect2 = new Rectangle(new Point(3, 3), new Point(5, 5));
+            Rectangle rectangle1 = new Rectangle(new Point(0, 0), new Point(2, 2));
+            Rectangle rectangle2 = new Rectangle(new Point(3, 3), new Point(5, 5));
             assertAll(
-                    () -> assertEquals(null, rect1.intersection(rect2)),
-                    () -> assertEquals(null, rect2.intersection(rect1))
+                    () -> assertEquals(null, rectangle1.intersection(rectangle2)),
+                    () -> assertEquals(null, rectangle2.intersection(rectangle1))
             );
         }
 
         @Test
         @DisplayName("corner intersection")
         void cornerIntersection() {
-            Rectangle rect1 = new Rectangle(new Point(0, 0), new Point(2, 2));
-            Rectangle rect2 = new Rectangle(new Point(1, 1), new Point(4, 4));
+            Rectangle rectangle1 = new Rectangle(new Point(0, 0), new Point(2, 2));
+            Rectangle rectangle2 = new Rectangle(new Point(1, 1), new Point(4, 4));
             Rectangle expected = new Rectangle(new Point(1, 1), new Point(2, 2));
             assertAll(
-                    () -> assertEquals(expected, rect1.intersection(rect2)),
-                    () -> assertEquals(expected, rect2.intersection(rect1))
+                    () -> assertEquals(expected, rectangle1.intersection(rectangle2)),
+                    () -> assertEquals(expected, rectangle2.intersection(rectangle1))
             );
         }
 
         @Test
         @DisplayName("side covering")
         void sideCover() {
-            Rectangle rect1 = new Rectangle(new Point(1, 1), new Point(3, 3));
-            Rectangle rect2 = new Rectangle(new Point(0, 0), new Point(2, 5));
+            Rectangle rectangle1 = new Rectangle(new Point(1, 1), new Point(3, 3));
+            Rectangle rectangle2 = new Rectangle(new Point(0, 0), new Point(2, 5));
             Rectangle expected = new Rectangle(new Point(1, 1), new Point(2, 3));
             assertAll(
-                    () -> assertEquals(expected, rect1.intersection(rect2)),
-                    () -> assertEquals(expected, rect2.intersection(rect1))
+                    () -> assertEquals(expected, rectangle1.intersection(rectangle2)),
+                    () -> assertEquals(expected, rectangle2.intersection(rectangle1))
             );
         }
 
         @Test
         @DisplayName("split middle")
         void splitMiddle() {
-            Rectangle rect1 = new Rectangle(new Point(1, 1), new Point(4, 4));
-            Rectangle rect2 = new Rectangle(new Point(0, 2), new Point(5, 3));
+            Rectangle rectangle1 = new Rectangle(new Point(1, 1), new Point(4, 4));
+            Rectangle rectangle2 = new Rectangle(new Point(0, 2), new Point(5, 3));
             Rectangle expected = new Rectangle(new Point(1, 2), new Point(4, 3));
             assertAll(
-                    () -> assertEquals(expected, rect1.intersection(rect2)),
-                    () -> assertEquals(expected, rect2.intersection(rect1))
+                    () -> assertEquals(expected, rectangle1.intersection(rectangle2)),
+                    () -> assertEquals(expected, rectangle2.intersection(rectangle1))
             );
         }
     }
 
+    @DisplayName("aligns with")
+    static class Alignment {
+
+        Rectangle rectangle1 = new Rectangle(new Point(2, 2), new Point(4, 4));
+
+        @Test
+        @DisplayName("null rectangle")
+        void nullRectangle() {
+            assertThrows(IllegalArgumentException.class, () -> rectangle1.alignsWith(null));
+        }
+
+        @Test
+        @DisplayName("upper left/right")
+        void upperLeftRight() {
+            Rectangle rectangle2 = new Rectangle(new Point(0, 2), new Point(1, 4));
+            assertAll(
+                    () -> assertTrue(rectangle1.alignsWith(rectangle2)),
+                    () -> assertTrue(rectangle2.alignsWith(rectangle1))
+            );
+        }
+
+        @Test
+        @DisplayName("lower left/right")
+        void lowerLeftRight() {
+            Rectangle rectangle2 = new Rectangle(new Point(0, 1), new Point(1, 4));
+            assertAll(
+                    () -> assertTrue(rectangle1.alignsWith(rectangle2)),
+                    () -> assertTrue(rectangle2.alignsWith(rectangle1))
+            );
+        }
+
+        @Test
+        @DisplayName("left up/down")
+        void leftUpDown() {
+            Rectangle rectangle2 = new Rectangle(new Point(2, 5), new Point(3, 7));
+            assertAll(
+                    () -> assertTrue(rectangle1.alignsWith(rectangle2)),
+                    () -> assertTrue(rectangle2.alignsWith(rectangle1))
+            );
+        }
+
+        @Test
+        @DisplayName("right up/down")
+        void rightUpDown() {
+            Rectangle rectangle2 = new Rectangle(new Point(3, 5), new Point(4, 6));
+            assertAll(
+                    () -> assertTrue(rectangle1.alignsWith(rectangle2)),
+                    () -> assertTrue(rectangle2.alignsWith(rectangle1))
+            );
+        }
+
+        @Test
+        @DisplayName("overlaps")
+        void overlaps() {
+            Rectangle rectangle2 = new Rectangle(new Point(3, 3), new Point(5, 5));
+            assertAll(
+                    () -> assertFalse(rectangle1.alignsWith(rectangle2)),
+                    () -> assertFalse(rectangle2.alignsWith(rectangle1))
+            );
+        }
+    }
 }

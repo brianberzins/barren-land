@@ -18,9 +18,13 @@ class Rectangle {
      *
      * @param lowerLeft     lower left corner of the rectangle
      * @param upperRight    upper right corner of the rectangle
-     * @throws IllegalArgumentException if the points are directionally not correct from each other
+     * @throws IllegalArgumentException if the points are directionally not correct from each other, or if either
+     * specified point is {@code null}
      */
     Rectangle(Point lowerLeft, Point upperRight) {
+        if (lowerLeft == null || upperRight == null) {
+            throw new IllegalArgumentException("rectangle corners cannot be null");
+        }
         if (upperRight.getX() < lowerLeft.getX()) {
             throw new IllegalArgumentException("upper right corner is to the left of the lower left corner");
         } else if (upperRight.getY() < lowerLeft.getY()) {
@@ -61,11 +65,24 @@ class Rectangle {
      *
      * @param rectangle rectangle to compare aligned with
      * @return {@code true} if this rectangle aligns with the specified rectangle
+     * @throws IllegalArgumentException if the specified rectangle is null
      */
     boolean alignsWith(Rectangle rectangle) {
-        return false;
+        if (rectangle == null) {
+            throw new IllegalArgumentException("rectangle cannot be null");
+        }
+        boolean adjacent =
+                lowerLeft.isAdjacent(rectangle.lowerRight)  ||
+                lowerLeft.isAdjacent(rectangle.upperLeft)   ||
+                upperLeft.isAdjacent(rectangle.upperRight)  ||
+                upperLeft.isAdjacent(rectangle.lowerLeft)   ||
+                lowerRight.isAdjacent(rectangle.lowerLeft)  ||
+                lowerRight.isAdjacent(rectangle.upperRight) ||
+                upperRight.isAdjacent(rectangle.upperLeft)  ||
+                upperRight.isAdjacent(rectangle.lowerRight);
+        boolean disjoint = this.intersection(rectangle) == null;
+        return adjacent && disjoint;
     }
-
 
     /**
      * Gets the rectangular intersection of this rectangle and specified rectangle.
@@ -74,6 +91,9 @@ class Rectangle {
      * @return rectangle representing the area that is within both this rectangle and the specified rectangle.
      */
     Rectangle intersection(Rectangle rectangle) {
+        if (rectangle == null) {
+            return null;
+        }
         int x1 = Math.max(this.lowerLeft.getX(), rectangle.lowerLeft.getX());
         int y1 = Math.max(this.lowerLeft.getY(), rectangle.lowerLeft.getY());
         int x2 = Math.min(this.upperRight.getX(), rectangle.lowerRight.getX());

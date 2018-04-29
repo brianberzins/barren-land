@@ -85,7 +85,6 @@ class Rectangle {
         } catch (IllegalArgumentException illegalArgumentException) {
             return null; // the intersection isn't a valid rectangle, so there is no intersection
         }
-
     }
 
 

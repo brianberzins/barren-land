@@ -5,3 +5,4 @@ barren-land.iml
 # gradle
 .gradle/
 build/
+out/

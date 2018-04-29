@@ -65,4 +65,66 @@ class RectangleTest {
 
     }
 
+    @DisplayName("intersect")
+    static class Intersect {
+
+        @Test
+        @DisplayName("entirely overlapping")
+        void totalOverlap() {
+            Rectangle outer = new Rectangle(new Point(0, 0), new Point(5, 5));
+            Rectangle inner = new Rectangle(new Point(2, 2), new Point(3, 3));
+            assertAll(
+                    () -> assertEquals(inner, outer.intersection(inner)),
+                    () -> assertEquals(inner, inner.intersection(outer))
+            );
+        }
+
+        @Test
+        @DisplayName("no intersection")
+        void noIntersection() {
+            Rectangle rect1 = new Rectangle(new Point(0, 0), new Point(2, 2));
+            Rectangle rect2 = new Rectangle(new Point(3, 3), new Point(5, 5));
+            assertAll(
+                    () -> assertEquals(null, rect1.intersection(rect2)),
+                    () -> assertEquals(null, rect2.intersection(rect1))
+            );
+        }
+
+        @Test
+        @DisplayName("corner intersection")
+        void cornerIntersection() {
+            Rectangle rect1 = new Rectangle(new Point(0, 0), new Point(2, 2));
+            Rectangle rect2 = new Rectangle(new Point(1, 1), new Point(4, 4));
+            Rectangle expected = new Rectangle(new Point(1, 1), new Point(2, 2));
+            assertAll(
+                    () -> assertEquals(expected, rect1.intersection(rect2)),
+                    () -> assertEquals(expected, rect2.intersection(rect1))
+            );
+        }
+
+        @Test
+        @DisplayName("side covering")
+        void sideCover() {
+            Rectangle rect1 = new Rectangle(new Point(1, 1), new Point(3, 3));
+            Rectangle rect2 = new Rectangle(new Point(0, 0), new Point(2, 5));
+            Rectangle expected = new Rectangle(new Point(1, 1), new Point(2, 3));
+            assertAll(
+                    () -> assertEquals(expected, rect1.intersection(rect2)),
+                    () -> assertEquals(expected, rect2.intersection(rect1))
+            );
+        }
+
+        @Test
+        @DisplayName("split middle")
+        void splitMiddle() {
+            Rectangle rect1 = new Rectangle(new Point(1, 1), new Point(4, 4));
+            Rectangle rect2 = new Rectangle(new Point(0, 2), new Point(5, 3));
+            Rectangle expected = new Rectangle(new Point(1, 2), new Point(4, 3));
+            assertAll(
+                    () -> assertEquals(expected, rect1.intersection(rect2)),
+                    () -> assertEquals(expected, rect2.intersection(rect1))
+            );
+        }
+    }
+
 }

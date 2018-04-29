@@ -39,8 +39,8 @@ class Rectangle {
      */
     int area() {
         // be very careful with off-by-one errors, all rectangles has a witch of 1
-        int width = upperRight.getX() - upperLeft.getX() + 1;
-        int height = upperRight.getY() - lowerRight.getY() + 1;
+        int width = upperRight.getX() - lowerLeft.getX() + 1;
+        int height = upperRight.getY() - lowerLeft.getY() + 1;
         return width * height;
     }
 
@@ -74,7 +74,18 @@ class Rectangle {
      * @return rectangle representing the area that is within both this rectangle and the specified rectangle.
      */
     Rectangle intersection(Rectangle rectangle) {
-        return null;
+        int x1 = Math.max(this.lowerLeft.getX(), rectangle.lowerLeft.getX());
+        int y1 = Math.max(this.lowerLeft.getY(), rectangle.lowerLeft.getY());
+        int x2 = Math.min(this.upperRight.getX(), rectangle.lowerRight.getX());
+        int y2 = Math.min(this.upperRight.getY(), rectangle.upperRight.getY());
+        Point newLowerLeft = new Point(x1, y1);
+        Point newUpperRight = new Point(x2, y2);
+        try {
+            return new Rectangle(newLowerLeft, newUpperRight);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            return null; // the intersection isn't a valid rectangle, so there is no intersection
+        }
+
     }
 
 

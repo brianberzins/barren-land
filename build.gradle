@@ -4,6 +4,12 @@ repositories {
     jcenter()
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.murasaki.jobs.barren.Main'
+    }
+}
+
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.16.20'
     testCompile 'org.junit.jupiter:junit-jupiter-api:5.1.0'

@@ -3,6 +3,9 @@ package com.murasaki.jobs.geometry;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("rectangle")
@@ -10,6 +13,14 @@ class RectangleTest {
 
     @DisplayName("constructor")
     static class Constructor {
+
+        @Test
+        @DisplayName("null points")
+        void nullPoints() {
+            Point point = new Point(0, 0);
+            assertThrows(IllegalArgumentException.class, () -> new Rectangle(null, point));
+            assertThrows(IllegalArgumentException.class, () -> new Rectangle(point, null));
+        }
 
         @Test
         @DisplayName("valid points do not throw an exceptions")
@@ -61,6 +72,13 @@ class RectangleTest {
             Point upperRight = new Point(5, 5);
             Rectangle rectangle = new Rectangle(lowerLeft, upperRight);
             assertEquals(36, rectangle.area());
+        }
+
+        @Test
+        @DisplayName("calculate by collection")
+        void calculate() {
+            Rectangle rectangle = new Rectangle(new Point(2, 2), new Point(5,5));
+            assertEquals(16, Rectangle.calculateArea(Collections.singleton(rectangle)));
         }
 
     }
@@ -142,7 +160,7 @@ class RectangleTest {
         @Test
         @DisplayName("null rectangle")
         void nullRectangle() {
-            assertThrows(IllegalArgumentException.class, () -> rectangle1.alignsWith(null));
+            assertFalse(rectangle1.alignsWith((Rectangle) null));
         }
 
         @Test
@@ -192,6 +210,61 @@ class RectangleTest {
             assertAll(
                     () -> assertFalse(rectangle1.alignsWith(rectangle2)),
                     () -> assertFalse(rectangle2.alignsWith(rectangle1))
+            );
+        }
+    }
+
+    @DisplayName("remove")
+    static class Remove {
+
+        Rectangle rectangle1 = new Rectangle(new Point(2, 2), new Point(6, 6));
+
+        @Test
+        @DisplayName("null rectangle")
+        void nullRectangle() {
+            Set<Rectangle> result = rectangle1.remove(null);
+            assertAll(
+                    () -> assertEquals(1, result.size()),
+                    () -> assertTrue(result.contains(rectangle1))
+            );
+        }
+
+        @Test
+        @DisplayName("corner overlap")
+        void cornerOverlap() {
+            Rectangle rectangle2 = new Rectangle(new Point(4, 4), new Point(7, 7));
+            Set<Rectangle> result = rectangle1.remove(rectangle2);
+            assertAll(
+                    () -> assertEquals(3, result.size()),
+                    () -> assertTrue(result.contains(new Rectangle(new Point(2, 2), new Point(3, 3)))),
+                    () -> assertTrue(result.contains(new Rectangle(new Point(4, 2), new Point(6, 3)))),
+                    () -> assertTrue(result.contains(new Rectangle(new Point(2, 4), new Point(3, 6))))
+            );
+        }
+
+        @Test
+        @DisplayName("total overlap")
+        void totalOverlap() {
+            Rectangle rectangle2 = new Rectangle(new Point(1, 1), new Point(7, 7));
+            Set<Rectangle> result = rectangle1.remove(rectangle2);
+            assertEquals(0, result.size());
+        }
+
+        @Test
+        @DisplayName("enclosed")
+        void enclosed() {
+            Rectangle rectangle2 = new Rectangle(new Point(3, 3), new Point(4, 4));
+            Set<Rectangle> result = rectangle1.remove(rectangle2);
+            assertAll(
+                    () -> assertEquals(8, result.size()),
+                    () -> assertTrue(result.contains(new Rectangle(new Point(2, 5), new Point(2, 6)))),
+                    () -> assertTrue(result.contains(new Rectangle(new Point(3, 5), new Point(4, 6)))),
+                    () -> assertTrue(result.contains(new Rectangle(new Point(5, 5), new Point(6, 6)))),
+                    () -> assertTrue(result.contains(new Rectangle(new Point(5, 3), new Point(6, 4)))),
+                    () -> assertTrue(result.contains(new Rectangle(new Point(2, 5), new Point(2, 6)))),
+                    () -> assertTrue(result.contains(new Rectangle(new Point(3, 2), new Point(4, 2)))),
+                    () -> assertTrue(result.contains(new Rectangle(new Point(2, 2), new Point(2, 2)))),
+                    () -> assertTrue(result.contains(new Rectangle(new Point(2, 3), new Point(2, 4))))
             );
         }
     }

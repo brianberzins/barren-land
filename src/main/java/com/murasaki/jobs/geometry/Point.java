@@ -3,7 +3,7 @@ package com.murasaki.jobs.geometry;
 import lombok.Value;
 
 @Value
-class Point {
+public class Point {
 
     int x;
     int y;
@@ -18,7 +18,19 @@ class Point {
         // check if the x coordinates are exactly one away
         // check if the y coordinates are exactly one away
         // take the xor of these conditions: only adjacent if exactly one in away in a single direction
-        return Math.abs(x - point.x) == 1 ^ Math.abs(y - point.y) == 1;
+        int xDiff = Math.abs(x - point.x);
+        int yDiff = Math.abs(y - point.y);
+        return (xDiff == 0 && yDiff == 1) || (xDiff == 1 && yDiff == 0);
     }
 
+    /**
+     * Gets the point that is offset from this point by the given x,y coordinates
+     *
+     * @param x offset in x direction
+     * @param y offset in y direction
+     * @return the point that is offset from this point by the specified coordinates
+     */
+    public Point offset(int x, int y) {
+        return new Point(this.x + x, this.y + y);
+    }
 }

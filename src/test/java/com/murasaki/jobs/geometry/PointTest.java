@@ -34,6 +34,17 @@ class PointTest {
         }
 
         @Test
+        @DisplayName("off by close")
+        void offByCloses() {
+            Point point1 = new Point(6, 0);
+            Point point2 = new Point(2, 5);
+            assertAll("",
+                    () -> assertFalse(point1.isAdjacent(point2)),
+                    () -> assertFalse(point2.isAdjacent(point1))
+            );
+        }
+
+        @Test
         @DisplayName("not adjacent by corner")
         void notAdjacentByCorner() {
             Point point1 = new Point(0, 0);
@@ -53,6 +64,18 @@ class PointTest {
                     () -> assertFalse(point1.isAdjacent(point2)),
                     () -> assertFalse(point2.isAdjacent(point1))
             );
+        }
+    }
+
+    @DisplayName("offset")
+    static class Translate {
+
+        @Test
+        @DisplayName("offset")
+        void translate() {
+            Point point1 = new Point(1, 1);
+            Point expected = new Point(-2, 3);
+            assertEquals(expected, point1.offset(-3, 2));
         }
 
     }
